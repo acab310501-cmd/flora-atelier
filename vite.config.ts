@@ -1,15 +1,11 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
-import path from 'path'; // Импортируйте path, если используете алиасы
+import path from 'path';
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  resolve: {
-    // Если вы хотите использовать алиас @/ для src, то правильно писать так:
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-    },
-  },
+  // Важно! Если ваш репозиторий называется не acab310501-cmd.github.io, а просто flora-atelier,
+  // то раскомментируйте строку ниже и укажите название репозитория:
+  // base: '/flora-atelier/', 
 });
