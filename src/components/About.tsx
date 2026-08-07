@@ -42,6 +42,8 @@ export default function About() {
         <img
           src={BG_IMG}
           alt=""
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-cover blur-2xl scale-110"
         />
       </motion.div>

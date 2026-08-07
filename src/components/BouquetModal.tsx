@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import type { Bouquet } from './Bouquets';
@@ -9,6 +10,13 @@ type BouquetModalProps = {
 };
 
 export default function BouquetModal({ bouquet, onClose }: BouquetModalProps) {
+  const [activeImg, setActiveImg] = useState(0);
+
+  // Reset to the first photo whenever a different bouquet opens
+  useEffect(() => {
+    setActiveImg(0);
+  }, [bouquet]);
+
   return (
     <AnimatePresence>
       {bouquet && (
@@ -46,12 +54,35 @@ export default function BouquetModal({ bouquet, onClose }: BouquetModalProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2">
               <div className="relative aspect-square md:aspect-auto md:min-h-[420px] overflow-hidden">
-                <img
-                  src={bouquet.image}
-                  alt={bouquet.name}
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/30 to-transparent md:bg-gradient-to-r" />
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={bouquet.gallery[activeImg]}
+                    src={bouquet.gallery[activeImg]}
+                    alt={bouquet.name}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                </AnimatePresence>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/30 to-transparent md:bg-gradient-to-r" />
+
+                {bouquet.gallery.length > 1 && (
+                  <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2">
+                    {bouquet.gallery.map((src, i) => (
+                      <button
+                        key={src}
+                        onClick={() => setActiveImg(i)}
+                        aria-label={`Фото ${i + 1}`}
+                        data-cursor="pointer"
+                        className={`h-2 rounded-full transition-all duration-300 ${
+                          i === activeImg ? 'w-6 bg-milk' : 'w-2 bg-milk/50 hover:bg-milk/80'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-col p-8 md:p-10">

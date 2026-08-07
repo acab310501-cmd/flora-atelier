@@ -11,6 +11,7 @@ export type Bouquet = {
   price: string;
   mood: string;
   image: string;
+  gallery: string[];
   care: string;
   hoverBg: string;
   span: string;
@@ -22,8 +23,8 @@ const BOUQUETS: Bouquet[] = [
     composition: 'пион, эвкалипт, розы',
     price: '4 800 ₽',
     mood: 'Свежесть и легкость первого летнего утра',
-    image:
-      'https://images.pexels.com/photos/37639104/pexels-photo-37639104.jpeg?auto=compress&cs=tinysrgb&w=1100',
+    image: '/images/utreni_briz3-1.webp',
+    gallery: ['/images/utreni_briz3-1.webp', '/images/utreni_briz.webp'],
     care: 'Подрежьте стебли под углом и поставьте в прохладную воду. Меняйте воду раз в два дня. Пионы любят светлую, но не солнечную сторону.',
     hoverBg: '#FADADD',
     span: 'md:col-span-2 md:row-span-2',
@@ -33,8 +34,8 @@ const BOUQUETS: Bouquet[] = [
     composition: 'сухоцветы, пампас, лунария',
     price: '5 200 ₽',
     mood: 'Спокойствие осеннего вечера у окна',
-    image:
-      'https://images.pexels.com/photos/18511420/pexels-photo-18511420.jpeg?auto=compress&cs=tinysrgb&w=900',
+    image: '/images/tihay_gavan1.webp',
+    gallery: ['/images/tihay_gavan1.webp', '/images/tihay_gavan.webp', '/images/tihay_gavan-1.webp'],
     care: 'Сухоцветы не требуют воды. Достаточно беречь букет от прямого солнца и влажности. Периодически смахивайте пыль мягкой кистью.',
     hoverBg: '#F5E6D3',
     span: '',
@@ -44,8 +45,8 @@ const BOUQUETS: Bouquet[] = [
     composition: 'розы, эвкалипт, гипсофила',
     price: '4 400 ₽',
     mood: 'Прохлада тенистого сада после дождя',
-    image:
-      'https://images.pexels.com/photos/16618910/pexels-photo-16618910.jpeg?auto=compress&cs=tinysrgb&w=900',
+    image: '/images/mytni_sad1.webp',
+    gallery: ['/images/mytni_sad1.webp', '/images/mytni_sad.webp', '/images/mytni_sad2.webp'],
     care: 'Розы предпочитают чистую воду и прохладу. Удаляйте увядающие бутоны — это продлит жизнь остальным. Эвкалипт сохраняет аромат до недели.',
     hoverBg: '#D4E9DF',
     span: '',
@@ -55,8 +56,8 @@ const BOUQUETS: Bouquet[] = [
     composition: 'лаванда, тюльпаны, розмарин',
     price: '3 900 ₽',
     mood: 'Дремота на залитом солнцем лавандовом поле',
-    image:
-      'https://images.pexels.com/photos/33448871/pexels-photo-33448871.jpeg?auto=compress&cs=tinysrgb&w=900',
+    image: '/images/lavand2.webp',
+    gallery: ['/images/lavand2.webp', '/images/lavand.webp', '/images/lavand1.webp'],
     care: 'Тюльпаны растут в вазе — подрезайте их каждые два дня. Лаванда и розмарин долго держат аромат. Держите букет подальше от фруктов.',
     hoverBg: '#E8D5F5',
     span: '',
@@ -66,8 +67,8 @@ const BOUQUETS: Bouquet[] = [
     composition: 'пионы, розы, гипсофила',
     price: '5 600 ₽',
     mood: 'Нежный аккорд для тихого праздника',
-    image:
-      'https://images.pexels.com/photos/13849767/pexels-photo-13849767.jpeg?auto=compress&cs=tinysrgb&w=900',
+    image: '/images/utreni_briz2.webp',
+    gallery: ['/images/utreni_briz2.webp', '/images/utreni_briz3.webp'],
     care: 'Пионы и розы любят прохладную воду и частую смену. Удаляйте листву ниже линии воды — это сохраняет букет свежим дольше.',
     hoverBg: '#FADADD',
     span: '',
@@ -112,6 +113,8 @@ export default function Bouquets() {
                   <motion.img
                     src={b.image}
                     alt={b.name}
+                    loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-cover will-change-transform"
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}
