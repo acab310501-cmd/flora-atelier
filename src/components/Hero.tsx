@@ -3,8 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { firePetals } from '@/lib/confetti';
 
-const HERO_IMG =
-  'https://images.pexels.com/photos/19059475/pexels-photo-19059475.jpeg?auto=compress&cs=tinysrgb&w=1600';
+const HERO_IMG = '/images/hero-flower.webp';
 
 const TITLE = 'Flora Atelier';
 
@@ -72,8 +71,9 @@ export default function Hero() {
       >
         <img
           src={HERO_IMG}
-          alt="Пионы в пастельных тонах — фирменный букет Flora Atelier"
+          alt="Hero flower"
           className="h-full w-full object-cover"
+          loading="eager"
           fetchPriority="high"
         />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(253,248,245,0.55)_75%,rgba(253,248,245,0.95)_100%)]" />
