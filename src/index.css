@@ -1,0 +1,77 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-cream: #fdf8f5;
+  --color-cream-deep: #f7ede6;
+  --color-rose: #e8b4b8;
+  --color-rose-deep: #d99a9f;
+  --color-rose-soft: #f2d4d6;
+  --color-mint: #a8c3b8;
+  --color-mint-deep: #8aae9f;
+  --color-ink: #2d2d2d;
+  --color-ink-soft: #5a5a5a;
+  --color-milk: #ffffff;
+
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+/* Grain noise overlay across the whole site */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Hide custom cursor styles on touch devices */
+@media (hover: none), (pointer: coarse) {
+  body { cursor: auto; }
+}
+
+::selection {
+  background: var(--color-rose);
+  color: var(--color-milk);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--color-cream-deep); }
+::-webkit-scrollbar-thumb { background: var(--color-rose); border-radius: 4px; }
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes pulse-down {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { box-shadow: 0 10px 30px -10px rgba(232,180,184,0.6); }
+  50% { box-shadow: 0 16px 44px -8px rgba(232,180,184,0.85); }
+}
+
+.hero-gradient {
+  background: linear-gradient(120deg, #f2d4d6 0%, #fdf8f5 40%, #f7ede6 70%, #e8b4b8 100%);
+  background-size: 200% 200%;
+  animation: gradient-shift 12s ease-in-out infinite;
+}
