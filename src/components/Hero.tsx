@@ -63,7 +63,7 @@ export default function Hero() {
       <div className="absolute inset-0 hero-gradient" />
 
       <motion.div
-        style={{ x: bgX, y: bgY, filter: 'brightness(0.65)' }}
+        style={{ x: bgX, y: bgY }}
         className="absolute inset-0"
         initial={{ scale: 1.12, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -76,12 +76,11 @@ export default function Hero() {
           loading="eager"
           fetchPriority="high"
         />
-        {/* Светлые градиенты (оставлены для мягкости) */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(253,248,245,0.55)_75%,rgba(253,248,245,0.95)_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(253,248,245,0.35)_0%,transparent_30%,transparent_60%,rgba(253,248,245,0.6)_100%)]" />
-        {/* Дополнительное затемнение для читаемости текста */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/30" />
+        {/* СИЛЬНОЕ ПРИГЛУШЕНИЕ — светлый полупрозрачный слой поверх картинки */}
+        <div className="absolute inset-0 bg-cream/85" />
+        {/* Дополнительные градиенты для мягкости (можно убрать, но оставлю для атмосферы) */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(253,248,245,0.3)_70%,rgba(253,248,245,0.7)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(253,248,245,0.2)_0%,transparent_40%,transparent_60%,rgba(253,248,245,0.4)_100%)]" />
       </motion.div>
 
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
