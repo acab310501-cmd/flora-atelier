@@ -21,7 +21,10 @@ export default function CustomCursor() {
   const cy = useSpring(y, springConfig);
 
   useEffect(() => {
-    if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
+    const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!isFinePointer) return;
+
+    document.documentElement.classList.add('has-custom-cursor');
 
     const move = (e: MouseEvent) => {
       x.set(e.clientX);
@@ -49,6 +52,7 @@ export default function CustomCursor() {
     return () => {
       window.removeEventListener('mousemove', move);
       document.removeEventListener('mouseleave', leave);
+      document.documentElement.classList.remove('has-custom-cursor');
     };
   }, [x, y]);
 
@@ -58,7 +62,7 @@ export default function CustomCursor() {
       {trail.map((d, i) => (
         <motion.div
           key={d.id}
-          className="pointer-events-none fixed top-0 left-0 z-[99] hidden h-2 w-2 rounded-full bg-rose/60 md:block"
+          className="pointer-events-none fixed top-0 left-0 z-[99] h-2 w-2 rounded-full bg-rose/60"
           style={{ left: d.x, top: d.y }}
           initial={{ opacity: 0.6, scale: 1 }}
           animate={{ opacity: 0, scale: 0.3 }}
@@ -68,7 +72,7 @@ export default function CustomCursor() {
 
       {/* Main cursor */}
       <motion.div
-        className="pointer-events-none fixed top-0 left-0 z-[100] hidden md:block will-change-transform"
+        className="pointer-events-none fixed top-0 left-0 z-[100] will-change-transform"
         style={{ x: cx, y: cy }}
         animate={{
           opacity: hidden ? 0 : 1,

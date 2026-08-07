@@ -17,6 +17,24 @@ export default function BouquetModal({ bouquet, onClose }: BouquetModalProps) {
     setActiveImg(0);
   }, [bouquet]);
 
+  // Close on Escape, and lock background scroll while the modal is open
+  useEffect(() => {
+    if (!bouquet) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKeyDown);
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [bouquet, onClose]);
+
   return (
     <AnimatePresence>
       {bouquet && (
