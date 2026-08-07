@@ -26,14 +26,30 @@ body {
   font-family: var(--font-sans);
   font-weight: 300;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
-/* The OS cursor is only hidden once CustomCursor confirms a fine pointer
-   (mouse/trackpad) via JS and adds this class to <html>. This keeps cursor
-   visibility tied to actual pointer capability instead of viewport width,
-   so resizing/narrow desktop windows never end up with no cursor at all. */
-html.has-custom-cursor body {
-  cursor: none;
+/* Hide system cursor only on precise-pointer devices */
+@media (hover: hover) and (pointer: fine) {
+  html,
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  label,
+  [role='button'],
+  [tabindex]:not([tabindex='-1']) {
+    cursor: none;
+  }
+}
+
+/* Restore system cursor on touch devices */
+@media (hover: none), (pointer: coarse) {
+  body {
+    cursor: auto;
+  }
 }
 
 /* Grain noise overlay across the whole site */
@@ -47,39 +63,79 @@ body::before {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Fallback: hide custom cursor styles on touch devices, in case JS hasn't
-   run yet (e.g. first paint) */
-@media (hover: none), (pointer: coarse) {
-  html.has-custom-cursor body { cursor: auto; }
-}
-
 ::selection {
   background: var(--color-rose);
   color: var(--color-milk);
 }
 
+/* Keyboard focus indicator */
+:focus-visible {
+  outline: 2px solid var(--color-rose-deep);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 /* Custom scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--color-cream-deep); }
-::-webkit-scrollbar-thumb { background: var(--color-rose); border-radius: 4px; }
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-rose);
+  border-radius: 4px;
+}
 
 @keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 @keyframes pulse-down {
-  0%, 100% { transform: translateY(0); opacity: 0.7; }
-  50% { transform: translateY(8px); opacity: 1; }
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
 }
 
 @keyframes pulse-soft {
-  0%, 100% { box-shadow: 0 10px 30px -10px rgba(232,180,184,0.6); }
-  50% { box-shadow: 0 16px 44px -8px rgba(232,180,184,0.85); }
+  0%,
+  100% {
+    box-shadow: 0 10px 30px -10px rgba(232, 180, 184, 0.6);
+  }
+  50% {
+    box-shadow: 0 16px 44px -8px rgba(232, 180, 184, 0.85);
+  }
 }
 
 .hero-gradient {
   background: linear-gradient(120deg, #f2d4d6 0%, #fdf8f5 40%, #f7ede6 70%, #e8b4b8 100%);
   background-size: 200% 200%;
   animation: gradient-shift 12s ease-in-out infinite;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -39,11 +39,13 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
         <FadeIn>
           <div className="grid grid-cols-1 gap-14 md:grid-cols-2 md:gap-20">
-            {/* Left: contacts + socials */}
             <div>
-              <h2 className="font-serif text-4xl font-bold sm:text-5xl">Flora Atelier</h2>
+              <h2 className="font-serif text-4xl font-bold sm:text-5xl">
+                Flora Atelier
+              </h2>
               <p className="mt-5 max-w-sm font-sans text-sm font-light leading-[1.8] text-milk/70">
-                Студия флористики в тихом углу города. Запись на консультацию — по предварительной договорённости.
+                Студия флористики в тихом углу города. Запись на консультацию — по
+                предварительной договорённости.
               </p>
 
               <ul className="mt-10 space-y-4 font-sans text-sm font-light text-milk/80">
@@ -67,7 +69,7 @@ export default function Footer() {
                   aria-label="Instagram"
                   whileHover={{ scale: 1.12, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-milk/20 transition-colors duration-300 hover:border-rose hover:bg-rose hover:text-ink will-change-transform"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-milk/20 transition-colors duration-300 hover:border-rose hover:bg-rose hover:text-ink"
                 >
                   <AtSign className="h-5 w-5" strokeWidth={1.5} />
                 </motion.a>
@@ -76,7 +78,7 @@ export default function Footer() {
                   aria-label="Pinterest"
                   whileHover={{ scale: 1.12, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-milk/20 transition-colors duration-300 hover:border-rose hover:bg-rose hover:text-ink will-change-transform"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-milk/20 transition-colors duration-300 hover:border-rose hover:bg-rose hover:text-ink"
                 >
                   <PinterestIcon className="h-5 w-5" />
                 </motion.a>
@@ -85,18 +87,18 @@ export default function Footer() {
                   aria-label="Telegram"
                   whileHover={{ scale: 1.12, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-milk/20 transition-colors duration-300 hover:border-rose hover:bg-rose hover:text-ink will-change-transform"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-milk/20 transition-colors duration-300 hover:border-rose hover:bg-rose hover:text-ink"
                 >
                   <TelegramIcon className="h-5 w-5" />
                 </motion.a>
               </div>
             </div>
 
-            {/* Right: subscribe form — grows on focus */}
             <div className="md:pt-4">
               <h3 className="font-serif text-2xl font-medium">Рассылка тишины</h3>
               <p className="mt-3 max-w-sm font-sans text-sm font-light leading-[1.8] text-milk/70">
-                Раз в месяц — письмо о сезонных букетах, флористических историях и тихих событиях студии.
+                Раз в месяц — письмо о сезонных букетах, флористических историях и
+                тихих событиях студии.
               </p>
               <form onSubmit={submit} className="mt-8 max-w-md">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -108,9 +110,10 @@ export default function Footer() {
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                     placeholder="Ваш email"
+                    aria-label="Email для рассылки"
                     animate={{ width: focused ? '100%' : 'auto' }}
                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                    className="flex-1 rounded-full border border-milk/20 bg-transparent px-5 py-3 font-sans text-sm font-light text-milk placeholder:text-milk/40 focus:border-rose focus:outline-none transition-colors"
+                    className="flex-1 rounded-full border border-milk/20 bg-transparent px-5 py-3 font-sans text-sm font-light text-milk placeholder:text-milk/40 transition-colors focus:border-rose focus:outline-none"
                   />
                   <AnimatePresence>
                     {focused && (
@@ -122,7 +125,7 @@ export default function Footer() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.88 }}
                         transition={{ type: 'spring', stiffness: 500, damping: 18 }}
-                        className="shrink-0 rounded-full bg-rose px-7 py-3 font-sans text-sm font-medium text-ink transition-colors hover:bg-rose-deep hover:text-milk will-change-transform"
+                        className="shrink-0 rounded-full bg-rose px-7 py-3 font-sans text-sm font-medium text-ink transition-colors hover:bg-rose-deep hover:text-milk"
                       >
                         Подписаться
                       </motion.button>
@@ -134,6 +137,7 @@ export default function Footer() {
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="mt-4 font-sans text-sm font-light text-mint"
+                    role="status"
                   >
                     Спасибо. Первое письмо придет с началом нового сезона.
                   </motion.p>

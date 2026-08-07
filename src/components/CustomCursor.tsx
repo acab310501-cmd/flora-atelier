@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { motion, useMotionValue, useSpring, type MotionValue } from 'framer-motion';
 
 type TrailDot = {
   id: number;
@@ -9,85 +9,104 @@ type TrailDot = {
 
 export default function CustomCursor() {
   const [isPointer, setIsPointer] = useState(false);
-  const [hidden, setHidden] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [trail, setTrail] = useState<TrailDot[]>([]);
   const trailId = useRef(0);
   const lastTrail = useRef(0);
 
-  const x = useMotionValue(-100);
-  const y = useMotionValue(-100);
-  const springConfig = { damping: 30, stiffness: 500, mass: 0.4 };
-  const cx = useSpring(x, springConfig);
-  const cy = useSpring(y, springConfig);
+  // Dot follows the cursor with zero lag
+  const dotX = useMotionValue(-100);
+  const dotY = useMotionValue(-100);
+
+  // Ring follows with a gentle spring for a trailing effect
+  const ringX = useSpring(dotX, { damping: 28, stiffness: 400, mass: 0.4 });
+  const ringY = useSpring(dotY, { damping: 28, stiffness: 400, mass: 0.4 });
 
   useEffect(() => {
-    const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (!isFinePointer) return;
+    // Skip entirely on touch devices
+    if (window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
 
-    document.documentElement.classList.add('has-custom-cursor');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const move = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
-      setHidden(false);
+      dotX.set(e.clientX);
+      dotY.set(e.clientY);
+      setVisible(true);
+
       const el = e.target as HTMLElement;
-      const interactive = el.closest('a, button, input, [data-cursor="pointer"]');
-      const overCard = Boolean(el.closest('[data-cursor="pointer"]'));
+      const interactive = el.closest('a, button, input, [role="button"], [data-cursor="pointer"]');
       setIsPointer(Boolean(interactive));
 
       // Pollen trail only over bouquet cards
-      if (overCard && e.timeStamp - lastTrail.current > 45) {
+      const overCard = Boolean(el.closest('[data-cursor="pointer"]'));
+      if (overCard && !reducedMotion && e.timeStamp - lastTrail.current > 55) {
         lastTrail.current = e.timeStamp;
         const id = trailId.current++;
-        setTrail((t) => [...t, { id, x: e.clientX, y: e.clientY }].slice(-10));
+        setTrail((t) => [...t, { id, x: e.clientX, y: e.clientY }].slice(-8));
         setTimeout(() => {
           setTrail((t) => t.filter((d) => d.id !== id));
-        }, 600);
+        }, 700);
       }
     };
-    const leave = () => setHidden(true);
 
-    window.addEventListener('mousemove', move);
+    const leave = () => setVisible(false);
+
+    window.addEventListener('mousemove', move, { passive: true });
     document.addEventListener('mouseleave', leave);
     return () => {
       window.removeEventListener('mousemove', move);
       document.removeEventListener('mouseleave', leave);
-      document.documentElement.classList.remove('has-custom-cursor');
     };
-  }, [x, y]);
+  }, [dotX, dotY]);
 
   return (
     <>
-      {/* Pollen trail dots */}
-      {trail.map((d, i) => (
+      {/* Pollen trail */}
+      {trail.map((d) => (
         <motion.div
           key={d.id}
-          className="pointer-events-none fixed top-0 left-0 z-[99] h-2 w-2 rounded-full bg-rose/60"
+          className="pointer-events-none fixed top-0 left-0 z-[98] hidden h-1.5 w-1.5 rounded-full bg-rose/50 md:block"
           style={{ left: d.x, top: d.y }}
           initial={{ opacity: 0.6, scale: 1 }}
           animate={{ opacity: 0, scale: 0.3 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
         />
       ))}
 
-      {/* Main cursor */}
+      {/* Ring — lags slightly behind for a premium trailing feel */}
       <motion.div
-        className="pointer-events-none fixed top-0 left-0 z-[100] will-change-transform"
-        style={{ x: cx, y: cy }}
+        className="pointer-events-none fixed top-0 left-0 z-[100] hidden md:block"
+        style={{ x: ringX, y: ringY }}
         animate={{
-          opacity: hidden ? 0 : 1,
-          scale: isPointer ? 1.83 : 1, // 24px -> 44px
-          backgroundColor: isPointer ? 'rgba(232, 180, 184, 0.95)' : 'rgba(232, 180, 184, 0)',
+          opacity: visible ? 1 : 0,
+          scale: isPointer ? 1.6 : 1,
+          borderColor: isPointer
+            ? 'rgba(232, 180, 184, 0.9)'
+            : 'rgba(217, 154, 159, 0.5)',
         }}
-        transition={{ scale: { duration: 0.25, ease: [0.22, 1, 0.36, 1] }, backgroundColor: { duration: 0.25 }, opacity: { duration: 0.2 } }}
+        transition={{
+          scale: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
+          opacity: { duration: 0.2 },
+          borderColor: { duration: 0.25 },
+        }}
       >
-        <div
-          className="-translate-x-1/2 -translate-y-1/2 h-6 w-6 rounded-full border"
-          style={{
-            borderColor: isPointer ? 'rgba(232, 180, 184, 0)' : 'rgba(232, 180, 184, 0.9)',
-            borderWidth: '1.5px',
-          }}
-        />
+        <div className="-translate-x-1/2 -translate-y-1/2 h-9 w-9 rounded-full border-[1.5px]" />
+      </motion.div>
+
+      {/* Dot — follows cursor exactly for precision */}
+      <motion.div
+        className="pointer-events-none fixed top-0 left-0 z-[101] hidden md:block"
+        style={{ x: dotX, y: dotY }}
+        animate={{
+          opacity: visible ? 1 : 0,
+          scale: isPointer ? 0.5 : 1,
+        }}
+        transition={{
+          scale: { duration: 0.2 },
+          opacity: { duration: 0.15 },
+        }}
+      >
+        <div className="-translate-x-1/2 -translate-y-1/2 h-2 w-2 rounded-full bg-rose-deep" />
       </motion.div>
     </>
   );

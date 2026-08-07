@@ -9,13 +9,14 @@ import Testimonials from './components/Testimonials';
 import CTA from './components/CTA';
 import Footer from './components/Footer';
 import FloatingPetals from './components/FloatingPetals';
+import ScrollBloom from './components/ScrollBloom';
 import { BgProvider, useBg } from './components/BgContext';
 
 function AppShell() {
   const { bg } = useBg();
   return (
     <div
-      className="relative min-h-screen will-change-transform"
+      className="relative min-h-screen"
       style={{
         backgroundColor: bg,
         transition: 'background-color 0.5s ease',
@@ -23,14 +24,17 @@ function AppShell() {
     >
       <CustomCursor />
       <FloatingPetals />
+      <ScrollBloom />
       <Navbar />
-      <Hero />
-      <About />
-      <Marquee />
-      <Bouquets />
-      <Process />
-      <Testimonials />
-      <CTA />
+      <main>
+        <Hero />
+        <About />
+        <Marquee />
+        <Bouquets />
+        <Process />
+        <Testimonials />
+        <CTA />
+      </main>
       <Footer />
     </div>
   );

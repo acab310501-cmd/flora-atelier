@@ -33,7 +33,6 @@ export default function Process() {
         </FadeIn>
 
         <div className="relative grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
-          {/* Divider line on desktop */}
           <motion.div
             className="pointer-events-none absolute left-[16%] right-[16%] top-7 hidden h-px bg-mint/40 md:block"
             initial={{ scaleX: 0 }}
@@ -45,14 +44,17 @@ export default function Process() {
 
           {STEPS.map((s, i) => (
             <FadeIn key={s.n} delay={i * 0.15}>
-              <div className="group relative h-full rounded-[2rem] border border-rose-soft bg-milk/60 px-8 py-10 backdrop-blur-sm transition-colors duration-500 hover:bg-milk hover:border-rose">
-                {/* Number growing from a point */}
+              <article className="group relative h-full rounded-[2rem] border border-rose-soft bg-milk/60 px-8 py-10 backdrop-blur-sm transition-colors duration-500 hover:border-rose hover:bg-milk">
                 <motion.div
-                  className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-rose-soft font-serif text-xl font-medium text-rose-deep will-change-transform"
+                  className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-rose-soft font-serif text-xl font-medium text-rose-deep"
                   initial={{ scale: 0, opacity: 0 }}
                   whileInView={{ scale: 1, opacity: 1 }}
                   viewport={{ once: true, margin: '-80px' }}
-                  transition={{ duration: 0.7, delay: 0.2 + i * 0.15, ease: [0.34, 1.56, 0.64, 1] }}
+                  transition={{
+                    duration: 0.7,
+                    delay: 0.2 + i * 0.15,
+                    ease: [0.34, 1.56, 0.64, 1],
+                  }}
                   whileHover={{ scale: 1.1 }}
                 >
                   {s.n}
@@ -63,7 +65,7 @@ export default function Process() {
                 <p className="font-sans text-sm font-light leading-[1.8] text-ink-soft">
                   {s.text}
                 </p>
-              </div>
+              </article>
             </FadeIn>
           ))}
         </div>

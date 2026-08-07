@@ -48,14 +48,16 @@ export default function Testimonials() {
               <motion.figure
                 whileHover={{ y: -5, boxShadow: '0 24px 60px -24px rgba(232,180,184,0.4)' }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                className="flex h-full flex-col rounded-[2rem] bg-milk p-8 shadow-[0_8px_40px_-20px_rgba(45,45,45,0.15)] will-change-transform [transform-style:preserve-3d]"
+                className="flex h-full flex-col rounded-[2rem] bg-milk p-8 shadow-[0_8px_40px_-20px_rgba(45,45,45,0.15)] [transform-style:preserve-3d]"
               >
-                <span className="mb-6 font-serif text-5xl leading-none text-rose">“</span>
+                <span className="mb-6 font-serif text-5xl leading-none text-rose" aria-hidden>
+                  “
+                </span>
                 <blockquote className="flex-1 font-sans text-sm font-light leading-[1.8] text-ink-soft">
                   {r.text}
                 </blockquote>
                 <figcaption className="mt-8 flex items-center gap-4 border-t border-rose-soft pt-6">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-mint/30 font-serif text-lg font-medium text-mint-deep">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-mint/30 font-serif text-lg font-medium text-mint-deep" aria-hidden>
                     {r.initials}
                   </div>
                   <div>

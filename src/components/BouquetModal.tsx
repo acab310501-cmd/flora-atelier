@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import type { Bouquet } from './Bouquets';
@@ -10,28 +10,19 @@ type BouquetModalProps = {
 };
 
 export default function BouquetModal({ bouquet, onClose }: BouquetModalProps) {
-  const [activeImg, setActiveImg] = useState(0);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
 
-  // Reset to the first photo whenever a different bouquet opens
-  useEffect(() => {
-    setActiveImg(0);
-  }, [bouquet]);
-
-  // Close on Escape, and lock background scroll while the modal is open
   useEffect(() => {
     if (!bouquet) return;
-
-    const onKeyDown = (e: KeyboardEvent) => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
-    document.addEventListener('keydown', onKeyDown);
-
-    const prevOverflow = document.body.style.overflow;
+    window.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
-
+    closeBtnRef.current?.focus();
     return () => {
-      document.removeEventListener('keydown', onKeyDown);
-      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
     };
   }, [bouquet, onClose]);
 
@@ -44,24 +35,26 @@ export default function BouquetModal({ bouquet, onClose }: BouquetModalProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
+          role="presentation"
         >
-          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-ink/50 backdrop-blur-sm"
             onClick={onClose}
+            aria-hidden
           />
 
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-label={bouquet.name}
-            className="relative z-10 w-full max-w-3xl overflow-hidden rounded-[2rem] bg-cream shadow-2xl will-change-transform"
+            className="relative z-10 w-full max-w-3xl overflow-hidden rounded-[2rem] bg-cream shadow-2xl"
             initial={{ opacity: 0, scale: 0.92, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 12 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
             <button
+              ref={closeBtnRef}
               onClick={onClose}
               aria-label="Закрыть"
               data-cursor="pointer"
@@ -71,36 +64,13 @@ export default function BouquetModal({ bouquet, onClose }: BouquetModalProps) {
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2">
-              <div className="relative aspect-square md:aspect-auto md:min-h-[420px] overflow-hidden">
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    key={bouquet.gallery[activeImg]}
-                    src={bouquet.gallery[activeImg]}
-                    alt={bouquet.name}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                </AnimatePresence>
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/30 to-transparent md:bg-gradient-to-r" />
-
-                {bouquet.gallery.length > 1 && (
-                  <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2">
-                    {bouquet.gallery.map((src, i) => (
-                      <button
-                        key={src}
-                        onClick={() => setActiveImg(i)}
-                        aria-label={`Фото ${i + 1}`}
-                        data-cursor="pointer"
-                        className={`h-2 rounded-full transition-all duration-300 ${
-                          i === activeImg ? 'w-6 bg-milk' : 'w-2 bg-milk/50 hover:bg-milk/80'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                )}
+              <div className="relative aspect-square overflow-hidden md:aspect-auto md:min-h-[420px]">
+                <img
+                  src={bouquet.image}
+                  alt={bouquet.name}
+                  className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/30 to-transparent md:bg-gradient-to-r" />
               </div>
 
               <div className="flex flex-col p-8 md:p-10">
@@ -134,10 +104,15 @@ export default function BouquetModal({ bouquet, onClose }: BouquetModalProps) {
                 </div>
 
                 <motion.button
-                  onClick={(e) => firePetals(e.clientX / window.innerWidth, e.clientY / window.innerHeight)}
+                  onClick={(e) =>
+                    firePetals(
+                      e.clientX / window.innerWidth,
+                      e.clientY / window.innerHeight
+                    )
+                  }
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.95 }}
-                  className="mt-8 self-start rounded-full bg-rose px-8 py-3.5 font-sans text-sm font-medium text-milk shadow-[0_10px_30px_-12px_rgba(232,180,184,0.7)] will-change-transform"
+                  className="mt-8 self-start rounded-full bg-rose px-8 py-3.5 font-sans text-sm font-medium text-milk shadow-[0_10px_30px_-12px_rgba(232,180,184,0.7)]"
                 >
                   Заказать букет
                 </motion.button>

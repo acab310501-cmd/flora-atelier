@@ -34,7 +34,6 @@ export default function About() {
       onMouseLeave={onLeave}
       className="relative overflow-hidden bg-cream py-28 md:py-40"
     >
-      {/* Parallax blurred background */}
       <motion.div
         style={{ x: bgX, y: bgY }}
         className="pointer-events-none absolute inset-0 opacity-[0.10]"
@@ -42,31 +41,36 @@ export default function About() {
         <img
           src={BG_IMG}
           alt=""
+          aria-hidden="true"
           loading="lazy"
           decoding="async"
-          className="h-full w-full object-cover blur-2xl scale-110"
+          className="h-full w-full scale-110 object-cover blur-2xl"
         />
       </motion.div>
 
-      <div className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 gap-14 px-6 md:grid-cols-2 md:gap-20 md:items-center">
+      <div className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 gap-14 px-6 md:grid-cols-2 md:items-center md:gap-20">
         <FadeIn>
           <p className="font-serif text-3xl font-medium leading-[1.3] text-ink sm:text-4xl md:text-5xl">
-            «Мы собираем букеты так, как пишут стихи — без лишних слов, только самые важные акценты.»
+            «Мы собираем букеты так, как пишут стихи — без лишних слов, только
+            самые важные акценты.»
           </p>
         </FadeIn>
 
         <FadeIn delay={0.15}>
           <div className="max-w-md">
-            {/* Decorative divider: thin line with a small flower */}
             <div className="mb-8 flex items-center gap-3">
               <span className="h-px w-16 bg-mint" />
               <FlowerMark className="h-4 w-4 text-rose" />
             </div>
             <p className="font-sans text-base font-light leading-[1.8] text-ink-soft">
-              Flora Atelier — это пространство, где флористика становится языком. Каждый цветок — это нота в мелодии вашего дня. Мы работаем с сезонными цветами, сухоцветами и редкими сортами, собранными на локальных фермах.
+              Flora Atelier — это пространство, где флористика становится языком.
+              Каждый цветок — это нота в мелодии вашего дня. Мы работаем с
+              сезонными цветами, сухоцветами и редкими сортами, собранными на
+              локальных фермах.
             </p>
             <p className="mt-5 font-sans text-base font-light leading-[1.8] text-ink-soft">
-              Мы верим, что букет — это не подарок, а послание. Тихое, точное, живое.
+              Мы верим, что букет — это не подарок, а послание. Тихое, точное,
+              живое.
             </p>
           </div>
         </FadeIn>
