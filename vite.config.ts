@@ -1,9 +1,16 @@
-import tailwindcss from '@tailwindcss/vite';
-import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  // Важно! Указываем название репозитория, чтобы GitHub Pages знал, где искать файлы.
-  base: '/flora-atelier/', 
-});
+export default defineConfig(({ mode }) => ({
+  plugins: [
+    react(),
+    tailwindcss()
+  ],
+
+  base:
+    mode === 'production' &&
+    process.env.GITHUB_ACTIONS
+      ? '/flora-atelier/'
+      : '/',
+}))
