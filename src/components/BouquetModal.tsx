@@ -1,126 +1,582 @@
-import { useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import type { Bouquet } from './Bouquets';
-import { firePetals } from '@/lib/confetti';
 
-type BouquetModalProps = {
+
+interface BouquetModalProps {
   bouquet: Bouquet | null;
   onClose: () => void;
-};
+}
 
-export default function BouquetModal({ bouquet, onClose }: BouquetModalProps) {
-  const closeBtnRef = useRef<HTMLButtonElement>(null);
+
+export default function BouquetModal({
+  bouquet,
+  onClose,
+}: BouquetModalProps) {
+
+  const [activeImage, setActiveImage] = useState(0);
+
 
   useEffect(() => {
+
     if (!bouquet) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKey);
+
+    setActiveImage(0);
+
+    const previous = document.body.style.overflow;
+
     document.body.style.overflow = 'hidden';
-    closeBtnRef.current?.focus();
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
+
+
+    const handleKey = (event: KeyboardEvent) => {
+
+      if (event.key === 'Escape') {
+        onClose();
+      }
+
+
+      if (event.key === 'ArrowRight') {
+        nextImage();
+      }
+
+
+      if (event.key === 'ArrowLeft') {
+        prevImage();
+      }
+
     };
-  }, [bouquet, onClose]);
+
+
+    window.addEventListener(
+      'keydown',
+      handleKey
+    );
+
+
+    return () => {
+
+      document.body.style.overflow = previous;
+
+      window.removeEventListener(
+        'keydown',
+        handleKey
+      );
+
+    };
+
+
+  }, [bouquet]);
+
+
+  if (!bouquet) return null;
+
+
+  function nextImage() {
+
+    if (!bouquet) return;
+
+    setActiveImage((current) =>
+      current === bouquet.images.length - 1
+        ? 0
+        : current + 1
+    );
+
+  }
+
+
+  function prevImage() {
+
+    if (!bouquet) return;
+
+    setActiveImage((current) =>
+      current === 0
+        ? bouquet.images.length - 1
+        : current - 1
+    );
+
+  }
+
+
 
   return (
+
     <AnimatePresence>
-      {bouquet && (
+
+      <motion.div
+
+        initial={{
+          opacity: 0,
+        }}
+
+        animate={{
+          opacity: 1,
+        }}
+
+        exit={{
+          opacity: 0,
+        }}
+
+        onClick={onClose}
+
+        className="
+          fixed
+          inset-0
+          z-50
+          flex
+          items-center
+          justify-center
+          bg-black/40
+          backdrop-blur-md
+          p-4
+        "
+
+      >
+
+
         <motion.div
-          className="fixed inset-0 z-[90] flex items-center justify-center p-4 md:p-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          role="presentation"
+
+          initial={{
+            opacity:0,
+            y:40,
+            scale:0.96,
+          }}
+
+          animate={{
+            opacity:1,
+            y:0,
+            scale:1,
+          }}
+
+          exit={{
+            opacity:0,
+            y:40,
+            scale:0.96,
+          }}
+
+          transition={{
+            duration:0.45,
+            ease:[0.22,1,0.36,1],
+          }}
+
+          onClick={(event)=>event.stopPropagation()}
+
+          className="
+            relative
+            grid
+            max-h-[90vh]
+            w-full
+            max-w-6xl
+            overflow-hidden
+            rounded-[2rem]
+            bg-[#FDF8F5]
+            shadow-2xl
+            lg:grid-cols-2
+          "
+
         >
-          <div
-            className="absolute inset-0 bg-ink/50 backdrop-blur-sm"
+
+
+          {/* CLOSE */}
+
+          <button
+
             onClick={onClose}
-            aria-hidden
-          />
 
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label={bouquet.name}
-            className="relative z-10 w-full max-w-3xl overflow-hidden rounded-[2rem] bg-cream shadow-2xl"
-            initial={{ opacity: 0, scale: 0.92, y: 24 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 12 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="
+              absolute
+              right-6
+              top-6
+              z-20
+              flex
+              h-10
+              w-10
+              items-center
+              justify-center
+              rounded-full
+              bg-white/70
+              text-xl
+              backdrop-blur
+              transition
+              hover:bg-white
+            "
+
           >
-            <button
-              ref={closeBtnRef}
-              onClick={onClose}
-              aria-label="Закрыть"
-              data-cursor="pointer"
-              className="absolute right-5 top-5 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-milk/80 text-ink transition-colors hover:bg-rose hover:text-milk"
+            ×
+          </button>
+
+
+
+
+          {/* IMAGE AREA */}
+
+          <div
+            className="
+              relative
+              flex
+              flex-col
+              bg-[#F4ECE7]
+              p-5
+            "
+          >
+
+
+            <div
+              className="
+                relative
+                flex
+                h-[55vh]
+                items-center
+                justify-center
+                overflow-hidden
+                rounded-3xl
+              "
             >
-              <X className="h-5 w-5" strokeWidth={1.5} />
-            </button>
 
-            <div className="grid grid-cols-1 md:grid-cols-2">
-              <div className="relative aspect-square overflow-hidden md:aspect-auto md:min-h-[420px]">
-                <img
-                  src={bouquet.image}
+
+              <AnimatePresence mode="wait">
+
+
+                <motion.img
+
+                  key={activeImage}
+
+                  src={bouquet.images[activeImage]}
+
                   alt={bouquet.name}
-                  className="h-full w-full object-cover"
+
+                  initial={{
+                    opacity:0,
+                    scale:1.04,
+                  }}
+
+                  animate={{
+                    opacity:1,
+                    scale:1,
+                  }}
+
+                  exit={{
+                    opacity:0,
+                    scale:0.98,
+                  }}
+
+                  transition={{
+                    duration:0.35,
+                  }}
+
+                  className="
+                    h-full
+                    w-full
+                    object-cover
+                  "
+
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/30 to-transparent md:bg-gradient-to-r" />
-              </div>
 
-              <div className="flex flex-col p-8 md:p-10">
-                <p className="mb-2 font-sans text-xs uppercase tracking-[0.3em] text-mint-deep">
-                  {bouquet.price}
-                </p>
-                <h3 className="font-serif text-3xl font-bold text-ink md:text-4xl">
-                  {bouquet.name}
-                </h3>
-                <p className="mt-3 font-serif text-lg italic text-rose-deep">
-                  {bouquet.mood}
-                </p>
 
-                <div className="mt-7 space-y-5">
-                  <div>
-                    <h4 className="mb-2 font-sans text-xs uppercase tracking-[0.2em] text-ink-soft">
-                      Состав
-                    </h4>
-                    <p className="font-sans text-sm font-light leading-[1.7] text-ink">
-                      {bouquet.composition}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="mb-2 font-sans text-xs uppercase tracking-[0.2em] text-ink-soft">
-                      Уход за букетом
-                    </h4>
-                    <p className="font-sans text-sm font-light leading-[1.7] text-ink-soft">
-                      {bouquet.care}
-                    </p>
-                  </div>
-                </div>
+              </AnimatePresence>
 
-                <motion.button
-                  onClick={(e) =>
-                    firePetals(
-                      e.clientX / window.innerWidth,
-                      e.clientY / window.innerHeight
-                    )
-                  }
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="mt-8 self-start rounded-full bg-rose px-8 py-3.5 font-sans text-sm font-medium text-milk shadow-[0_10px_30px_-12px_rgba(232,180,184,0.7)]"
-                >
-                  Заказать букет
-                </motion.button>
-              </div>
+
+
+              {bouquet.images.length > 1 && (
+
+                <>
+
+                  <button
+
+                    onClick={prevImage}
+
+                    className="
+                      absolute
+                      left-4
+                      top-1/2
+                      -translate-y-1/2
+                      flex
+                      h-11
+                      w-11
+                      items-center
+                      justify-center
+                      rounded-full
+                      bg-white/80
+                      text-xl
+                      backdrop-blur
+                    "
+
+                  >
+                    ‹
+                  </button>
+
+
+
+                  <button
+
+                    onClick={nextImage}
+
+                    className="
+                      absolute
+                      right-4
+                      top-1/2
+                      -translate-y-1/2
+                      flex
+                      h-11
+                      w-11
+                      items-center
+                      justify-center
+                      rounded-full
+                      bg-white/80
+                      text-xl
+                      backdrop-blur
+                    "
+
+                  >
+                    ›
+                  </button>
+
+                </>
+
+              )}
+
+
             </div>
-          </motion.div>
+
+
+
+
+            {/* THUMBNAILS */}
+
+            <div
+              className="
+                mt-4
+                flex
+                gap-3
+                overflow-x-auto
+              "
+            >
+
+              {bouquet.images.map(
+                (image,index)=>(
+
+                <button
+
+                  key={image}
+
+                  onClick={() =>
+                    setActiveImage(index)
+                  }
+
+                  className={`
+                    h-20
+                    w-20
+                    flex-shrink-0
+                    overflow-hidden
+                    rounded-xl
+                    ${
+                      activeImage === index
+                      ? 'ring-2 ring-rose-deep'
+                      : ''
+                    }
+                  `}
+
+                >
+
+                  <img
+                    src={image}
+                    alt=""
+                    className="
+                      h-full
+                      w-full
+                      object-cover
+                    "
+                  />
+
+                </button>
+
+              ))}
+
+            </div>
+
+
+          </div>
+
+
+
+
+
+
+          {/* CONTENT */}
+
+
+          <div
+            className="
+              overflow-y-auto
+              p-8
+              lg:p-12
+            "
+          >
+
+
+            <p
+              className="
+                text-xs
+                uppercase
+                tracking-[0.3em]
+                text-rose-deep
+              "
+            >
+              Букет
+            </p>
+
+
+
+            <h2
+              className="
+                mt-4
+                font-serif
+                text-5xl
+                text-ink
+              "
+            >
+              {bouquet.name}
+            </h2>
+
+
+
+            <p
+              className="
+                mt-4
+                text-lg
+                font-light
+                text-ink-soft
+              "
+            >
+              {bouquet.mood}
+            </p>
+
+
+
+
+            <div
+              className="
+                my-8
+                h-px
+                bg-black/10
+              "
+            />
+
+
+
+
+            <div>
+
+              <h3
+                className="
+                  font-serif
+                  text-xl
+                "
+              >
+                Состав
+              </h3>
+
+
+              <p
+                className="
+                  mt-3
+                  text-ink-soft
+                "
+              >
+                {bouquet.composition}
+              </p>
+
+
+            </div>
+
+
+
+
+
+            <div
+              className="
+                mt-8
+              "
+            >
+
+              <h3
+                className="
+                  font-serif
+                  text-xl
+                "
+              >
+                Уход
+              </h3>
+
+
+              <p
+                className="
+                  mt-3
+                  leading-relaxed
+                  text-ink-soft
+                "
+              >
+                {bouquet.care}
+              </p>
+
+
+            </div>
+
+
+
+
+
+            <div
+              className="
+                mt-10
+                flex
+                items-center
+                justify-between
+              "
+            >
+
+              <span
+                className="
+                  font-serif
+                  text-3xl
+                  text-ink
+                "
+              >
+                {bouquet.price}
+              </span>
+
+
+              <button
+
+                className="
+                  rounded-full
+                  bg-rose-deep
+                  px-8
+                  py-4
+                  text-sm
+                  text-white
+                  transition
+                  hover:opacity-90
+                "
+
+              >
+                Заказать букет
+
+              </button>
+
+
+            </div>
+
+
+          </div>
+
+
         </motion.div>
-      )}
+
+
+      </motion.div>
+
+
     </AnimatePresence>
+
   );
 }

@@ -10,7 +10,7 @@ export type Bouquet = {
   composition: string;
   price: string;
   mood: string;
-  image: string;
+  images: string[];
   care: string;
   hoverBg: string;
   span: string;
@@ -21,117 +21,159 @@ const BOUQUETS: Bouquet[] = [
     name: 'Утренний бриз',
     composition: 'пион, эвкалипт, розы',
     price: '4 800 ₽',
-    mood: 'Свежесть и легкость первого летнего утра',
-    image:
-      'https://images.pexels.com/photos/37639104/pexels-photo-37639104.jpeg?auto=compress&cs=tinysrgb&w=1100',
-    care: 'Подрежьте стебли под углом и поставьте в прохладную воду. Меняйте воду раз в два дня. Пионы любят светлую, но не солнечную сторону.',
+    mood: 'Свежесть и лёгкость первого летнего утра',
+
+    images: [
+      '/images/utreni_briz.webp',
+      '/images/utreni_briz2.webp',
+      '/images/utreni_briz3.webp',
+      '/images/utreni_briz3-1.webp',
+    ],
+
+    care:
+      'Подрежьте стебли под углом и поставьте в прохладную воду. Меняйте воду раз в два дня. Пионы любят светлую, но не солнечную сторону.',
+
     hoverBg: '#FADADD',
     span: 'md:col-span-2 md:row-span-2',
   },
+
   {
     name: 'Тихая гавань',
     composition: 'сухоцветы, пампас, лунария',
     price: '5 200 ₽',
     mood: 'Спокойствие осеннего вечера у окна',
-    image:
-      'https://images.pexels.com/photos/18511420/pexels-photo-18511420.jpeg?auto=compress&cs=tinysrgb&w=900',
-    care: 'Сухоцветы не требуют воды. Достаточно беречь букет от прямого солнца и влажности. Периодически смахивайте пыль мягкой кистью.',
+
+    images: [
+      '/images/tihay_gavan.webp',
+      '/images/tihay_gavan1.webp',
+      '/images/tihay_gavan-1.webp',
+    ],
+
+    care:
+      'Сухоцветы не требуют воды. Достаточно беречь букет от прямого солнца и влажности. Периодически смахивайте пыль мягкой кистью.',
+
     hoverBg: '#F5E6D3',
     span: '',
   },
+
   {
     name: 'Мятный сад',
     composition: 'розы, эвкалипт, гипсофила',
     price: '4 400 ₽',
     mood: 'Прохлада тенистого сада после дождя',
-    image:
-      'https://images.pexels.com/photos/16618910/pexels-photo-16618910.jpeg?auto=compress&cs=tinysrgb&w=900',
-    care: 'Розы предпочитают чистую воду и прохладу. Удаляйте увядающие бутоны — это продлит жизнь остальным. Эвкалипт сохраняет аромат до недели.',
+
+    images: [
+      '/images/mytni_sad.webp',
+      '/images/mytni_sad1.webp',
+      '/images/mytni_sad2.webp',
+    ],
+
+    care:
+      'Розы предпочитают чистую воду и прохладу. Удаляйте увядающие бутоны — это продлит жизнь остальным. Эвкалипт сохраняет аромат до недели.',
+
     hoverBg: '#D4F0EB',
     span: '',
   },
+
   {
     name: 'Лавандовый сон',
     composition: 'лаванда, тюльпаны, розмарин',
     price: '3 900 ₽',
     mood: 'Дремота на залитом солнцем лавандовом поле',
-    image:
-      'https://images.pexels.com/photos/33448871/pexels-photo-33448871.jpeg?auto=compress&cs=tinysrgb&w=900',
-    care: 'Тюльпаны растут в вазе — подрезайте их каждые два дня. Лаванда и розмарин долго держат аромат. Держите букет подальше от фруктов.',
+
+    images: [
+      '/images/lavand.webp',
+      '/images/lavand1.webp',
+      '/images/lavand2.webp',
+    ],
+
+    care:
+      'Тюльпаны растут в вазе — подрезайте их каждые два дня. Лаванда и розмарин долго держат аромат. Держите букет подальше от фруктов.',
+
     hoverBg: '#EDE4F0',
     span: '',
   },
+
   {
     name: 'Светлая мелодия',
     composition: 'пионы, розы, гипсофила',
     price: '5 600 ₽',
     mood: 'Нежный аккорд для тихого праздника',
-    image:
-      'https://images.pexels.com/photos/13849767/pexels-photo-13849767.jpeg?auto=compress&cs=tinysrgb&w=900',
-    care: 'Пионы и розы любят прохладную воду и частую смену. Удаляйте листву ниже линии воды — это сохраняет букет свежим дольше.',
+
+    images: [
+      '/images/lavand1.webp',
+      '/images/lavand2.webp',
+      '/images/lavand.webp',
+    ],
+
+    care:
+      'Пионы и розы любят прохладную воду и частую смену. Удаляйте листву ниже линии воды — это сохраняет букет свежим дольше.',
+
     hoverBg: '#FADADD',
     span: '',
   },
 ];
+
 
 function BouquetCard({
   bouquet,
   index,
   onHover,
   onLeave,
-  onClick,
   onDetails,
 }: {
   bouquet: Bouquet;
   index: number;
   onHover: () => void;
   onLeave: () => void;
-  onClick: (e: React.MouseEvent<HTMLElement>) => void;
-  onDetails: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onDetails: (e: React.MouseEvent) => void;
 }) {
   return (
     <FadeIn delay={index * 0.08} className={bouquet.span}>
       <article
-        data-cursor="pointer"
         onMouseEnter={onHover}
         onMouseLeave={onLeave}
-        onClick={onClick}
-        className="group relative h-full overflow-hidden rounded-[2rem] bg-milk shadow-[0_8px_40px_-16px_rgba(45,45,45,0.18)] transition-shadow duration-500 hover:shadow-[0_24px_70px_-24px_rgba(232,180,184,0.5)]"
+        className="group relative overflow-hidden rounded-3xl bg-milk shadow-sm cursor-pointer"
       >
-        <div className="relative aspect-[4/5] overflow-hidden">
-          <motion.img
-            src={bouquet.image}
-            alt={`Букет «${bouquet.name}» — ${bouquet.composition}`}
-            loading={index < 2 ? 'eager' : 'lazy'}
-            decoding="async"
-            className="h-full w-full object-cover"
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{
-              duration: 0.9,
-              delay: 0.15 + index * 0.08,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            whileHover={{ scale: 1.07 }}
-          />
-          <motion.div
-            initial={{ y: '100%' }}
-            whileHover={{ y: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/85 via-ink/55 to-transparent px-7 pb-6 pt-16"
-          >
-            <p className="font-serif text-lg italic text-milk">{bouquet.mood}</p>
-          </motion.div>
-          <span className="absolute right-5 top-5 rounded-full bg-milk/85 px-4 py-1.5 font-sans text-xs font-medium text-rose-deep backdrop-blur-sm">
-            {bouquet.price}
-          </span>
+        <motion.img
+          src={bouquet.images[0]}
+          alt={`Букет «${bouquet.name}» — ${bouquet.composition}`}
+          loading={index < 2 ? 'eager' : 'lazy'}
+          decoding="async"
+          className="h-full w-full object-cover"
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{
+            duration: 0.9,
+            delay: 0.15 + index * 0.08,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          whileHover={{ scale: 1.07 }}
+        />
+
+        <motion.div
+          initial={{ y: '100%' }}
+          whileHover={{ y: 0 }}
+          transition={{
+            duration: 0.5,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/85 via-ink/55 to-transparent px-7 pb-6 pt-16 text-sm text-white"
+        >
+          {bouquet.mood}
+        </motion.div>
+
+        <div className="absolute right-6 top-6 rounded-full bg-white/80 px-4 py-2 text-sm backdrop-blur">
+          {bouquet.price}
         </div>
+
 
         <div className="px-7 py-6">
           <h3 className="font-serif text-2xl font-medium text-ink">
             {bouquet.name}
           </h3>
+
           <p className="mt-2 font-sans text-sm font-light text-ink-soft">
             {bouquet.composition}
           </p>
@@ -150,58 +192,80 @@ function BouquetCard({
   );
 }
 
+
 const MemoCard = memo(BouquetCard);
+
 
 function Bouquets() {
   const [active, setActive] = useState<Bouquet | null>(null);
   const { setBg } = useBg();
 
-  return (
-    <section id="bouquets" className="bg-cream-deep py-28 md:py-44">
-      <div className="mx-auto max-w-6xl px-6">
-        <FadeIn className="mb-20 text-center md:mb-28">
-          <p className="mb-5 font-sans text-xs uppercase tracking-[0.4em] text-mint-deep">
-            Каталог
-          </p>
-          <h2 className="font-serif text-5xl font-bold text-ink sm:text-6xl md:text-7xl">
-            Букеты
-          </h2>
-          <p className="mx-auto mt-6 max-w-md font-sans text-base font-light leading-relaxed text-ink-soft">
-            Пять историй, собранных вручную из сезонных цветов. Нажмите, чтобы
-            узнать настроение и состав.
-          </p>
-        </FadeIn>
 
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-6">
-          {BOUQUETS.map((b, i) => (
-            <MemoCard
-              key={b.name}
-              bouquet={b}
-              index={i}
-              onHover={() => setBg(b.hoverBg)}
-              onLeave={() => setBg('#FDF8F5')}
-              onClick={(e) =>
-                firePetals(
-                  e.clientX / window.innerWidth,
-                  e.clientY / window.innerHeight
-                )
-              }
-              onDetails={(e) => {
-                e.stopPropagation();
-                setActive(b);
-                firePetals(
-                  e.clientX / window.innerWidth,
-                  e.clientY / window.innerHeight
-                );
-              }}
-            />
-          ))}
-        </div>
+  return (
+    <section className="mx-auto max-w-7xl px-6 py-24">
+
+      <div className="mb-16 text-center">
+
+        <p className="font-sans text-sm uppercase tracking-[0.3em] text-rose-deep">
+          Каталог
+        </p>
+
+        <h2 className="mt-4 font-serif text-5xl text-ink">
+          Букеты
+        </h2>
+
+        <p className="mx-auto mt-6 max-w-xl font-sans text-base font-light leading-relaxed text-ink-soft">
+          Пять историй, собранных вручную из сезонных цветов.
+          Нажмите, чтобы узнать настроение и состав.
+        </p>
+
       </div>
 
-      <BouquetModal bouquet={active} onClose={() => setActive(null)} />
+
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 md:gap-6">
+
+        {BOUQUETS.map((bouquet, index) => (
+
+          <MemoCard
+            key={bouquet.name}
+            bouquet={bouquet}
+            index={index}
+
+            onHover={() =>
+              setBg(bouquet.hoverBg)
+            }
+
+            onLeave={() =>
+              setBg('#FDF8F5')
+            }
+
+            onDetails={(event) => {
+
+              event.stopPropagation();
+
+              setActive(bouquet);
+
+              firePetals(
+                event.clientX / window.innerWidth,
+                event.clientY / window.innerHeight
+              );
+
+            }}
+          />
+
+        ))}
+
+      </div>
+
+
+      <BouquetModal
+        bouquet={active}
+        onClose={() => setActive(null)}
+      />
+
     </section>
   );
 }
+
 
 export default memo(Bouquets);
