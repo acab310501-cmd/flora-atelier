@@ -1,15 +1,15 @@
-import tailwindcss from '@tailwindcss/vite';
-import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  base: '/Flora_Atelier/', // <--- Добавлена эта строка! (название совпадает с репозиторием)
-  resolve: {
-    tsconfigPaths: true,
-  },
-  optimizeDeps: {
-    exclude: ['lucide-react'],
-  },
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
+
+  base:
+    process.env.VERCEL === "1"
+      ? "/"
+      : "/Flora_Atelier/",
 });
